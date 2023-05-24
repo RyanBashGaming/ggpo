@@ -16,6 +16,9 @@ if(WIN32)
 	endif()
 endif()
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
 # What do we want to build?
 option(GGPO_BUILD_SDK "Enable the build of the GGPO SDK" ON)
 option(GGPO_BUILD_VECTORWAR "Enable the build of the Vector War example app" ON)

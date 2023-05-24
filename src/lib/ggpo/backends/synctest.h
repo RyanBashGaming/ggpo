@@ -13,6 +13,12 @@
 #include "sync.h"
 #include "ring_buffer.h"
 
+#ifndef _WIN32
+#include <sys/stat.h>
+#define MAX_PATH 4096
+#define OutputDebugStringA(x) printf("%s", x)
+#endif
+
 class SyncTestBackend : public IQuarkBackend {
 public:
    SyncTestBackend(GGPOSessionCallbacks *cb, char *gamename, int frames, int num_players);

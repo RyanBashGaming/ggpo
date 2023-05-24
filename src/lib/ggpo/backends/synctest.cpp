@@ -21,7 +21,11 @@ SyncTestBackend::SyncTestBackend(GGPOSessionCallbacks *cb,
    _running = false;
    _logfp = NULL;
    _current_input.erase();
+   #ifdef _WIN32
    strcpy_s(_game, gamename);
+   #else
+   strcpy(_game, gamename);
+   #endif
 
    /*
     * Initialize the synchronziation layer
@@ -169,7 +173,9 @@ SyncTestBackend::RaiseSyncError(const char *fmt, ...)
    puts(buf);
    OutputDebugStringA(buf);
    EndLog();
+   #ifdef _WIN32
    DebugBreak();
+   #endif
 }
 
 GGPOErrorCode
@@ -187,11 +193,19 @@ SyncTestBackend::BeginLog(int saving)
    EndLog();
 
    char filename[MAX_PATH];
+   #ifdef _WIN32
    CreateDirectoryA("synclogs", NULL);
    sprintf_s(filename, ARRAY_SIZE(filename), "synclogs\\%s-%04d-%s.log",
            saving ? "state" : "log",
            _sync.GetFrameCount(),
            _rollingback ? "replay" : "original");
+   #else
+   mkdir("synclogs", 0777);
+   sprintf_s(filename, ARRAY_SIZE(filename), "synclogs/%s-%04d-%s.log",
+           saving ? "state" : "log",
+           _sync.GetFrameCount(),
+           _rollingback ? "replay" : "original");
+   #endif
 
     fopen_s(&_logfp, filename, "w");
 }

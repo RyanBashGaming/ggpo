@@ -62,7 +62,11 @@ GameInput::log(char *prefix, bool show_frame) const
 {
 	char buf[1024];
    size_t c = strlen(prefix);
-	strcpy_s(buf, prefix);
+   #ifndef __linux__
+	   strcpy_s(buf, prefix);
+   #else
+      strcpy(buf, prefix);
+   #endif
 	desc(buf + c, ARRAY_SIZE(buf) - c, show_frame);
    strncat_s(buf, ARRAY_SIZE(buf) - strlen(buf), "\n", 1);
 	Log(buf);

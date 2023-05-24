@@ -32,29 +32,30 @@ public:
          Unknown = -1,
          Connected,
          Synchronizing,
-         Synchronzied,
+         Synchronized,
          Input,
          Disconnected,
          NetworkInterrupted,
          NetworkResumed,
       };
 
-      Type      type;
+      Type type;
       union {
          struct {
-            GameInput   input;
+            GameInput input;
          } input;
          struct {
-            int         total;
-            int         count;
+            int total;
+            int count;
          } synchronizing;
          struct {
-            int         disconnect_timeout;
+            int disconnect_timeout;
          } network_interrupted;
       } u;
 
-      UdpProtocol::Event(Type t = Unknown) : type(t) { }
+      Event(Type t = Unknown) : type(t) {}
    };
+
 
 public:
    virtual bool OnLoopPoll(void *cookie);

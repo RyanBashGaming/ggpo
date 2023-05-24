@@ -13,6 +13,14 @@
 #include "ggponet.h"
 #include "ring_buffer.h"
 
+#ifndef _WIN32
+#include <string.h>
+#include <sys/ioctl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#endif
+
 #define MAX_UDP_ENDPOINTS     16
 
 static const int MAX_UDP_PACKET_SIZE = 4096;

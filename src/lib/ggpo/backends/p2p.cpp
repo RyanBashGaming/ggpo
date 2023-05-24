@@ -161,7 +161,11 @@ Peer2PeerBackend::DoPoll(int timeout)
          }
          // XXX: this is obviously a farce...
          if (timeout) {
+            #ifdef _WIN32
             Sleep(1);
+            #else
+            sleep(1);
+            #endif
          }
       }
    }
@@ -427,7 +431,7 @@ Peer2PeerBackend::OnUdpProtocolEvent(UdpProtocol::Event &evt, GGPOPlayerHandle h
       info.u.synchronizing.total = evt.u.synchronizing.total;
       _callbacks.on_event(&info);
       break;
-   case UdpProtocol::Event::Synchronzied:
+   case UdpProtocol::Event::Synchronized:
       info.code = GGPO_EVENTCODE_SYNCHRONIZED_WITH_PEER;
       info.u.synchronized.player = handle;
       _callbacks.on_event(&info);

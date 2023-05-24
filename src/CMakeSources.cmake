@@ -27,6 +27,7 @@ if(UNIX)
 	set(GGPO_LIB_SRC_NOFILTER
 		${GGPO_LIB_SRC_NOFILTER}
 		"lib/ggpo/platform_linux.cpp"
+		"lib/ggpo/pevents.cpp"
 	)
 endif()
 

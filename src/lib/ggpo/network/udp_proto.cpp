@@ -287,6 +287,7 @@ UdpProtocol::SendMsg(UdpMsg *msg)
    PumpSendQueue();
 }
 
+#ifdef _WIN32
 bool
 UdpProtocol::HandlesMsg(sockaddr_in &from,
                         UdpMsg *msg)
@@ -297,6 +298,16 @@ UdpProtocol::HandlesMsg(sockaddr_in &from,
    return _peer_addr.sin_addr.S_un.S_addr == from.sin_addr.S_un.S_addr &&
           _peer_addr.sin_port == from.sin_port;
 }
+#else
+bool UdpProtocol::HandlesMsg(sockaddr_in& from, UdpMsg* msg)
+{
+   if (!_udp) {
+      return false;
+   }
+   return memcmp(&_peer_addr.sin_addr, &from.sin_addr, sizeof(struct in_addr)) == 0 &&
+          _peer_addr.sin_port == from.sin_port;
+}
+#endif
 
 void
 UdpProtocol::OnMsg(UdpMsg *msg, int len)
@@ -450,7 +461,7 @@ void
 UdpProtocol::LogEvent(const char *prefix, const UdpProtocol::Event &evt)
 {
    switch (evt.type) {
-   case UdpProtocol::Event::Synchronzied:
+   case UdpProtocol::Event::Synchronized:
       Log("%s (event: Synchronzied).\n", prefix);
       break;
    }
@@ -499,7 +510,7 @@ UdpProtocol::OnSyncReply(UdpMsg *msg, int len)
    Log("Checking sync state (%d round trips remaining).\n", _state.sync.roundtrips_remaining);
    if (--_state.sync.roundtrips_remaining == 0) {
       Log("Synchronized!\n");
-      QueueEvent(UdpProtocol::Event(UdpProtocol::Event::Synchronzied));
+      QueueEvent(UdpProtocol::Event(UdpProtocol::Event::Synchronized));
       _current_state = Running;
       _last_received_input.frame = -1;
       _remote_magic_number = msg->hdr.magic;
